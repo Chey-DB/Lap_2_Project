@@ -9,5 +9,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
+  },
+  "scripts": {
+    "dev": "nodemon -L index.js",
+    "start": "node index.js",
+    "setup-db": "node ./database/setup.js"
   }
 }
