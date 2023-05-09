@@ -29,6 +29,11 @@ async function login (req, res ) {
 
 }
 
+async function showAllUsers(req, res) {
+  const users = await User.getAll();
+  res.json(users);
+}
+
 module.exports = {
-  register, login
+  register, login, showAllUsers
 }
