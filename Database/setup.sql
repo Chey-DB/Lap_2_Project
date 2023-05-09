@@ -8,6 +8,7 @@ CREATE TABLE skill (
     description VARCHAR (500) NOT NULL,
     location VARCHAR (100) NOT NULL,
     PRIMARY KEY (skill_id)
+    FOREIGN KEY (user_id) REFERENCES user_account(user_id)
 );
 
 CREATE TABLE user_account (
