@@ -1,13 +1,14 @@
 const db = require("../database/connect.js")
 
 class Workshop {
-  constructor (workshop_id, title, description, location, date, time) {
+  constructor (workshop_id, title, description, location, date, time, image_data) {
     this.id = workshop_id;
     this.title = title;
     this.description = description;
     this.location = location;
     this.date = date;
     this.time = time;
+    this.image_data = image_data;
   }
 
      static async getAll() {
@@ -30,7 +31,7 @@ class Workshop {
 
     static async create(workshop) {
         try {
-            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time) VALUES ($1, $2, $3, $4, $5) RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time]);
+            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data]);
             return newWorkshop;
         } catch (err) {
             return err.message;
@@ -39,7 +40,7 @@ class Workshop {
 
     async update(id, workshop) {
         try {
-            const updatedWorkshop = await db.query("UPDATE workshops SET title = $1, description = $2, location = $3, date = $4, time = $5 WHERE workshop_id = $6 RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, id]);
+            const updatedWorkshop = await db.query("UPDATE workshops SET title = $1, description = $2, location = $3, date = $4, time = $5, image_data = $6 WHERE workshop_id = $7 RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, id]);
             return updatedWorkshop;
         } catch (err) {
             return err.message;

@@ -9,6 +9,7 @@ CREATE TABLE workshops (
     location VARCHAR (100) NOT NULL,
     date DATE NOT NULL,
     time TIME NOT NULL,
+    image_data BYTEA,
     PRIMARY KEY (workshop_id)
     FOREIGN KEY (user_id) REFERENCES user_accounts("user_id")
 );
@@ -18,6 +19,7 @@ CREATE TABLE user_accounts (
     username VARCHAR(30) UNIQUE NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     password CHAR(60) NOT NULL,
+    image_data BYTEA,
     PRIMARY KEY (user_id)
 );
 
