@@ -8,6 +8,7 @@ CREATE TABLE user_accounts (
     email VARCHAR(50) UNIQUE NOT NULL,
     password CHAR(60) NOT NULL,
     image_data BYTEA,
+    workshop_id INT,
     PRIMARY KEY (user_id)
 );
 
@@ -21,7 +22,7 @@ CREATE TABLE workshops (
     image_data BYTEA,
     user_id INT NOT NULL,
     PRIMARY KEY (workshop_id),
-    FOREIGN KEY (user_id) REFERENCES user_accounts(user_id)
+    FOREIGN KEY (user_id) REFERENCES user_accounts("user_id") ON DELETE CASCADE
 );
 
 
