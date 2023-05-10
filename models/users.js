@@ -26,6 +26,15 @@ class User {
         }
     }
 
+    static async getOneByUsername(username) {
+        try {
+            const user = await db.query("SELECT * FROM user_accounts WHERE username = $1", [username]);
+            return user;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
     static async create(user) {
         try {
             const newUser = await db.query("INSERT INTO user_accounts (username, email, password) VALUES ($1, $2, $3) RETURNING *", [user.username, user.email, user.password]);
