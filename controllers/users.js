@@ -46,13 +46,49 @@ async function login (req, res) {
   }
 }
 
+async function viewProfile (req, res) {
+  try {
+      const user = await User.getById(req.params.id)
+      res.status(200).json({
+          success: true,
+          result: user
+      })
+
+  } catch (err) {
+      res.status(400).json({
+          success: false,
+          error: err
+      })
+  }
+}
+
+async function logout (req, res) {
+  try {
+      const token = req.headers["authorization"]
+      const result = await Token.delete(token)
+      res.status(200).json({
+          success: true,
+          result: result
+      })
+
+  } catch (err) {
+      res.status(400).json({
+          success: false,
+          error: err
+      })
+  }
+}
 
 
 async function showAllUsers(req, res) {
-  const users = await User.getAll();
-  res.json(users);
+    try {
+        const users = await User.getAll();
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }
 
 module.exports = {
-  register, login, showAllUsers
+  register, login, viewProfile, logout, showAllUsers
 }
