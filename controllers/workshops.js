@@ -1,4 +1,4 @@
-const Workshop = require('../models/workshop');
+const Workshop = require('../models/workshops');
 
 async function index(req, res) {
     try {
