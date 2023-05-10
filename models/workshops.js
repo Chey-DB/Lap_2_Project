@@ -1,14 +1,15 @@
 const db = require("../database/connect.js")
 
 class Workshop {
-  constructor (workshop_id, title, description, location, date, time, image_data) {
+  constructor (workshop_id, title, description, location, date, time) {
     this.id = workshop_id;
     this.title = title;
     this.description = description;
     this.location = location;
     this.date = date;
     this.time = time;
-    this.image_data = image_data;   
+    this.image_data = image_data;
+    this.user_id = user_id;
   }
 
      static async getAll() {
@@ -31,7 +32,7 @@ class Workshop {
 
     static async create(workshop) {
         try {
-            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data]);
+            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.user_id]);
             return newWorkshop;
         } catch (err) {
             return err.message;
@@ -40,7 +41,7 @@ class Workshop {
 
     async update(id, workshop) {
         try {
-            const updatedWorkshop = await db.query("UPDATE workshops SET title = $1, description = $2, location = $3, date = $4, time = $5, image_data = $6 WHERE workshop_id = $7 RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, id]);
+            const updatedWorkshop = await db.query("UPDATE workshops SET title = $1, description = $2, location = $3, date = $4, time = $5 image_data = $6 user_id = $7 WHERE workshop_id = $6 RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.user_id, id]);
             return updatedWorkshop;
         } catch (err) {
             return err.message;

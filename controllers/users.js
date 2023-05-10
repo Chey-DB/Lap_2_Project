@@ -37,7 +37,6 @@ async function login (req, res) {
               token: token
           })
       }
-
   } catch (err) {
       res.status(403).json({
           success: false,
@@ -78,7 +77,6 @@ async function logout (req, res) {
       })
   }
 }
-
 
 async function showAllUsers(req, res) {
     try {
