@@ -2,18 +2,6 @@ DROP TABLE IF EXISTS workshops;
 DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS user_accounts;
 
-CREATE TABLE workshops (
-    workshop_id INT GENERATED ALWAYS AS IDENTITY,
-    title VARCHAR (100) NOT NULL,
-    description VARCHAR (500) NOT NULL,
-    location VARCHAR (100) NOT NULL,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    image_data BYTEA,
-    PRIMARY KEY (workshop_id)
-    FOREIGN KEY (user_id) REFERENCES user_accounts("user_id")
-);
-
 CREATE TABLE user_accounts (
     user_id INT GENERATED ALWAYS AS IDENTITY,
     username VARCHAR(30) UNIQUE NOT NULL,
@@ -22,6 +10,20 @@ CREATE TABLE user_accounts (
     image_data BYTEA,
     PRIMARY KEY (user_id)
 );
+
+CREATE TABLE workshops (
+    workshop_id INT GENERATED ALWAYS AS IDENTITY,
+    title VARCHAR (100) NOT NULL,
+    description VARCHAR (500) NOT NULL,
+    location VARCHAR (100) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    image_data BYTEA,
+    user_id INT NOT NULL,
+    PRIMARY KEY (workshop_id),
+    FOREIGN KEY (user_id) REFERENCES user_accounts(user_id)
+);
+
 
 CREATE TABLE tokens (
     token_id INT GENERATED ALWAYS AS IDENTITY,
