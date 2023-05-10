@@ -29,7 +29,7 @@ async function create(req, res) {
 
 async function update(req, res) {
     try {
-        const workshop = await Workshop.update(req.params.id, req.body);
+        let workshop = await Workshop.update(req.params.id, req.body);
         res.status(200).json(workshop);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -38,7 +38,8 @@ async function update(req, res) {
 
 async function destroy(req, res) {
     try {
-        const workshop = await Workshop.delete(req.params.id);
+        const workshop = await Workshop.getById(req.params.id);
+        const result = await workshop.destroy;
         res.status(200).json(workshop);
     } catch (err) {
         res.status(500).json({ error: err.message });

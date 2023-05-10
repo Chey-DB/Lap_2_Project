@@ -23,18 +23,21 @@ async function register (req, res) {
 };
 
 async function login (req, res) {
-  try {
       const data = req.body
+  try {
       const user = await User.getOneByUsername(data["username"])
+      console.log(data["password"])
+      // console.log(user["password"])
       const authenticated = await bcrypt.compare(data["password"], user["password"])
       if (!authenticated){
           throw new Error("Incorrect credentials")
       } else {
           const token = await Token.create(user["id"])
+          console.log(token)
           res.status(200).json({
               success: true,
               authenticated: true,
-              token: token
+              token: token.token
           })
       }
   } catch (err) {
@@ -42,6 +45,7 @@ async function login (req, res) {
           success: false,
           error: err
       })
+      // console.log(err)
   }
 }
 
