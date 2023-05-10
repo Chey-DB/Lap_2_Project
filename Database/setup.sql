@@ -21,7 +21,7 @@ CREATE TABLE workshops (
     user_id INT NOT NULL,
     image_data BYTEA,
     PRIMARY KEY (workshop_id),
-    FOREIGN KEY (user_id) REFERENCES user_accounts("user_id")
+    FOREIGN KEY (user_id) REFERENCES user_accounts("user_id") ON DELETE CASCADE
 );
 
 CREATE TABLE tokens (
