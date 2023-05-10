@@ -1,11 +1,12 @@
 const db = require("../database/connect.js")
 
 class User {
-    constructor (user_id, username, email, password) {
+    constructor (user_id, username, email, password, image_data) {
         this.id = user_id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.image_data = image_data;
     }
 
     static async getAll() {
@@ -37,7 +38,7 @@ class User {
 
     static async create(user) {
         try {
-            const newUser = await db.query("INSERT INTO user_accounts (username, email, password) VALUES ($1, $2, $3) RETURNING *", [user.username, user.email, user.password]);
+            const newUser = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING *", [user.username, user.email, user.password, user.image_data]);
             return newUser;
         } catch (err) {
             return err.message;
@@ -46,7 +47,7 @@ class User {
 
     async update(id, user) {
         try {
-            const updatedUser = await db.query("UPDATE user_accounts SET username = $1, email = $2, password = $3 WHERE user_id = $4 RETURNING *", [user.username, user.email, user.password, id]);
+            const updatedUser = await db.query("UPDATE user_accounts SET username = $1, email = $2, password = $3, image_data = $4 WHERE user_id = $5 RETURNING *", [user.username, user.email, user.password, user.image_data, id]);
             return updatedUser;
         } catch (err) {
             return err.message;
