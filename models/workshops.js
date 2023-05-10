@@ -7,7 +7,7 @@ class Workshop {
     this.description = description;
     this.location = location;
     this.date = date;
-    this.time = time;   
+    this.time = time;
   }
 
      static async getAll() {
