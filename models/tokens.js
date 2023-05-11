@@ -13,7 +13,8 @@ class Token {
         try {
             const token = uuidv4();
             const response = await db.query("INSERT INTO tokens (user_id, token) VALUES ($1, $2) RETURNING token_id", [user_id, token]);
-            const newId = new Token(response.rows[0].token_id);
+            const newId = (response.rows[0].token_id);
+            console.log(newId);
             const newToken = await Token.getOneById(newId);
 
             return newToken;
@@ -31,11 +32,13 @@ class Token {
         }
     }
 
-    static async getOneById(id) {
+    static async getOneById(token_id) {
         try {
-            const userToken = await db.query("SELECT * FROM tokens WHERE token_id = $1", [id]);
-            return userToken;
+            const userToken = await db.query("SELECT * FROM tokens WHERE token_id = $1", [token_id]);
+            console.log(userToken.rows[0]);
+            return new Token(userToken.rows[0]);
         } catch (err) {
+            console.log("error in getOneById")
             return err.message;
         }
     }

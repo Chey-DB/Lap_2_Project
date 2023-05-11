@@ -30,7 +30,7 @@ class User {
     static async getOneByUsername(username) {
         try {
             const user = await db.query("SELECT * FROM user_accounts WHERE username = $1", [username]);
-            return user;
+            return user.rows[0];
         } catch (err) {
             console.log("error in getOneByUsername")
             return err.message;
@@ -39,8 +39,8 @@ class User {
 
     static async create(user) {
         try {
-            const newUser = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING *", [user.username, user.email, user.password, user.image_data]);
-            return newUser;
+            const newUser = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING user_id", [user.username, user.email, user.password, user.image_data]);
+            return newUser.rows[0];
         } catch (err) {
             return err.message;
         }

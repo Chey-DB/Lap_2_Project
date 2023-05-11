@@ -32,8 +32,8 @@ class Workshop {
 
     static async create(workshop) {
         try {
-            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING workshop_id;", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.user_id]);
-            return newWorkshop;
+            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.user_id]);
+            return newWorkshop.rows[0];
         } catch (err) {
             return err.message;
         }
@@ -51,7 +51,7 @@ class Workshop {
     async destroy(id) {
         try {
             const deletedWorkshop = await db.query("DELETE FROM workshops WHERE workshop_id = $1", [id]);
-            return deletedWorkshop;
+            return deletedWorkshop.rows[0];
         } catch (err) {
             return err.message;
         }
