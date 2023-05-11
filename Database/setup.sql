@@ -8,7 +8,6 @@ CREATE TABLE user_accounts (
     email VARCHAR(50) UNIQUE NOT NULL,
     password CHAR(60) NOT NULL,
     image_data BYTEA,
-    workshop_id INT,
     PRIMARY KEY (user_id)
 );
 

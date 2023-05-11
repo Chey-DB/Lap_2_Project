@@ -19,7 +19,7 @@ class User {
         }
     }
 
-    static async getOne(id) {
+    static async getById(id) {
         try {
             const user = await db.query("SELECT * FROM user_accounts WHERE user_id = $1", [id]);
             return user;
@@ -31,8 +31,9 @@ class User {
     static async getOneByUsername(username) {
         try {
             const user = await db.query("SELECT * FROM user_accounts WHERE username = $1", [username]);
-            return user;
+            return user.rows[0];
         } catch (err) {
+            console.log("error in getOneByUsername")
             return err.message;
         }
     }
@@ -40,10 +41,8 @@ class User {
     static async create(data) {
       const { username, email, password, image_data, workshop_id } = data;
         try {
-            let response = await db.query("INSERT INTO user_accounts (username, email, password, image_data, workshop_id) VALUES ($1, $2, $3, $4, $5) RETURNING user_id", [username, email, password, image_data, workshop_id]);
-            const newId = newUser.rows[0].user_id;
-            const newUser = await getOne(newId);
-            return newUser;
+            const newUser = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING user_id", [user.username, user.email, user.password, user.image_data]);
+            return newUser.rows[0];
         } catch (err) {
             return err.message;
         }

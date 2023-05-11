@@ -23,23 +23,23 @@ async function register (req, res) {
 };
 
 async function login (req, res) {
-      const data = req.body
+  const data = req.body
   try {
-      const user = await User.getOneByUsername(data["username"])
-      console.log(data["password"])
-      // console.log(user["password"])
-      const authenticated = await bcrypt.compare(data["password"], user["password"])
-      if (!authenticated){
-          throw new Error("Incorrect credentials")
-      } else {
-          const token = await Token.create(user["id"])
-          console.log(token)
-          res.status(200).json({
-              success: true,
-              authenticated: true,
-              token: token.token
-          })
-      }
+    const user = await User.getOneByUsername(data["username"])
+if (!user) {
+  throw new Error("Incorrect credentials");
+}
+const authenticated = await bcrypt.compare(data["password"], user["password"])
+if (!authenticated) {
+  throw new Error("Incorrect credentials");
+} else {
+  const token = await Token.create(user["user_id"])
+  res.status(200).json({
+      success: true,
+      authenticated: true,
+      token: token
+  })
+}
   } catch (err) {
       res.status(403).json({
           success: false,
@@ -48,6 +48,47 @@ async function login (req, res) {
       // console.log(err)
   }
 }
+//       const user = await User.getOneByUsername(data["username"])
+//       console.log(user)
+
+//       const authenticated = await bcrypt.compare(data["password"], user["password"])
+
+//       if (!authenticated){
+//           throw new Error("Incorrect credentials")
+//       } else {
+//           const token = await Token.create(user["user_id"])
+//           console.log(token)
+//           res.status(200).json({
+//               success: true,
+//               authenticated: true,
+//               token: token
+//           })
+//       }
+//   } catch (err) {
+//       res.status(403).json({
+//           success: false,
+//           error: err
+//       })
+//   }
+// }
+
+// const user = await User.getOneByUsername(data["username"])
+// if (!user) {
+//   throw new Error("Incorrect credentials");
+// }
+// const authenticated = await bcrypt.compare(data["password"], user["password"])
+// if (!authenticated) {
+//   throw new Error("Incorrect credentials");
+// } else {
+//   const token = await Token.create(user["user_id"])
+//   console.log(token)
+//   res.status(200).json({
+//       success: true,
+//       authenticated: true,
+//       token: token
+//   })
+// }
+
 
 async function viewProfile (req, res) {
   try {
