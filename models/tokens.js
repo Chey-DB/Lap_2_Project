@@ -12,7 +12,10 @@ class Token {
     static async create(user_id) {
         try {
             const token = uuidv4();
-            const newToken = await db.query("INSERT INTO tokens (user_id, token) VALUES ($1, $2) RETURNING *", [user_id, token]);
+            const response = await db.query("INSERT INTO tokens (user_id, token) VALUES ($1, $2) RETURNING token_id", [user_id, token]);
+            const newId = new Token(response.rows[0].token_id);
+            const newToken = await Token.getOneById(newId);
+
             return newToken;
         } catch (err) {
             return err.message;

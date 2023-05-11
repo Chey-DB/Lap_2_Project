@@ -18,7 +18,7 @@ class User {
         }
     }
 
-    static async getOne(id) {
+    static async getById(id) {
         try {
             const user = await db.query("SELECT * FROM user_accounts WHERE user_id = $1", [id]);
             return user;
@@ -32,6 +32,7 @@ class User {
             const user = await db.query("SELECT * FROM user_accounts WHERE username = $1", [username]);
             return user;
         } catch (err) {
+            console.log("error in getOneByUsername")
             return err.message;
         }
     }
