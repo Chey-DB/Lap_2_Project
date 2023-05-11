@@ -10,6 +10,7 @@ class Workshop {
     this.time = time;
     this.image_data = image_data;
     this.user_id = user_id;
+    this.workshop_id = workshop_id;
   }
 
      static async getAll() {
@@ -32,7 +33,7 @@ class Workshop {
 
     static async create(workshop) {
         try {
-            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING workshop_id;", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, 1 ]);
+            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING workshop_id;", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.user_id ]);
             return newWorkshop;
         } catch (err) {
             return err.message;
