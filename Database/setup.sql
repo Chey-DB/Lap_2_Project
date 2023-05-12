@@ -19,9 +19,9 @@ CREATE TABLE workshops (
     date DATE NOT NULL,
     time TIME NOT NULL,
     image_data BYTEA,
-    user_id INT NOT NULL,
+    username VARCHAR(30) NOT NULL,
     PRIMARY KEY (workshop_id),
-    FOREIGN KEY (user_id) REFERENCES user_accounts("user_id") ON DELETE CASCADE
+    FOREIGN KEY (username) REFERENCES user_accounts("username") ON DELETE CASCADE
 );
 
 

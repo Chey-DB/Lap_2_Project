@@ -7,7 +7,8 @@ const workshopRouter = Router();
 
 workshopRouter.get('/', workshopController.index);
 workshopRouter.get('/:id', workshopController.show);
-workshopRouter.post('/', authenticator, workshopController.create);
+workshopRouter.get('/lastWorkshop', workshopController.showLastWorkshop);
+workshopRouter.post('/', workshopController.create);
 workshopRouter.patch('/:id', workshopController.update);
 workshopRouter.delete('/:id', workshopController.destroy);
 

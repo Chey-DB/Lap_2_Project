@@ -23,9 +23,10 @@ async function register (req, res) {
 };
 
 async function login (req, res) {
-  const data = req.body
   try {
+    const data = req.body   
     const user = await User.getOneByUsername(data["username"])
+<<<<<<< HEAD
 if (!user) {
   throw new Error("Incorrect credentials");
 }
@@ -40,6 +41,23 @@ if (!authenticated) {
       token: token
   })
 }
+=======
+    
+    const authenticated = await bcrypt.compare(data["password"], user["password"])
+
+
+    if (!authenticated) {
+        throw new Error("Incorrect credentials");
+    } else {
+        const token = await Token.create(user["id"])
+        console.log(token)
+        res.status(200).json({
+            success: true,
+            authenticated: true,
+            token: token.token
+        })
+    }   
+>>>>>>> chey
   } catch (err) {
       res.status(403).json({
           success: false,
