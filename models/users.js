@@ -7,7 +7,6 @@ class User {
         this.email = email;
         this.password = password;
         this.image_data = image_data;
-        this.workshop_id = workshop_id;
     }
 
     static async getAll() {
@@ -38,8 +37,7 @@ class User {
         }
     }
 
-    static async create(data) {
-      const { username, email, password, image_data, workshop_id } = data;
+    static async create(user) {
         try {
             const { username, email, password, image_data } = user;
             const response = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING user_id", [username, email, password, image_data]);
@@ -53,7 +51,7 @@ class User {
 
     async update(id, user) {
         try {
-            const updatedUser = await db.query("UPDATE user_accounts SET username = $1, email = $2, password = $3, image_data = $4 WHERE user_id = $5 RETURNING *", [username, email, password, image_data, id]);
+            const updatedUser = await db.query("UPDATE user_accounts SET username = $1, email = $2, password = $3, image_data = $4 WHERE user_id = $5 RETURNING *", [user.username, user.email, user.password, user.image_data, id]);
             return updatedUser;
         } catch (err) {
             return err.message;

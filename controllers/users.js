@@ -46,7 +46,6 @@ async function login (req, res) {
           success: false,
           error: err
       })
-      // console.log(err)
   }
 }
 //       const user = await User.getOneByUsername(data["username"])
