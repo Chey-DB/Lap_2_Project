@@ -1,7 +1,7 @@
 const db = require("../database/connect.js")
 
 class User {
-    constructor (user_id, username, email, password, image_data) {
+    constructor ({ user_id, username, email, password, image_data  }) {
         this.id = user_id;
         this.username = username;
         this.email = email;
@@ -12,7 +12,7 @@ class User {
     static async getAll() {
         try {
             const users = await db.query("SELECT * FROM user_accounts");
-            return users;
+            return users.rows.map(user => new User(user));
         } catch (err) {
             return err.message;
         }
@@ -20,8 +20,8 @@ class User {
 
     static async getById(id) {
         try {
-            const user = await db.query("SELECT * FROM user_accounts WHERE user_id = $1", [id]);
-            return user;
+            const response = await db.query("SELECT * FROM user_accounts WHERE user_id = $1", [id]);
+            return new User(response.rows[0]); 
         } catch (err) {
             return err.message;
         }
@@ -29,8 +29,8 @@ class User {
 
     static async getOneByUsername(username) {
         try {
-            const user = await db.query("SELECT * FROM user_accounts WHERE username = $1", [username]);
-            return user.rows[0];
+            const response = await db.query("SELECT * FROM user_accounts WHERE username = $1", [username]);
+            return new User(response.rows[0]);
         } catch (err) {
             console.log("error in getOneByUsername")
             return err.message;
@@ -39,8 +39,11 @@ class User {
 
     static async create(user) {
         try {
-            const newUser = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING user_id", [user.username, user.email, user.password, user.image_data]);
-            return newUser.rows[0];
+            const { username, email, password, image_data } = user;
+            const response = await db.query("INSERT INTO user_accounts (username, email, password, image_data) VALUES ($1, $2, $3, $4) RETURNING user_id", [username, email, password, image_data]);
+            const newId = response.rows[0].user_id;
+            const newUser = await User.getById(newId);
+            return newUser;
         } catch (err) {
             return err.message;
         }
@@ -58,7 +61,7 @@ class User {
     async destroy(id) {
         try {
             const deletedUser = await db.query("DELETE FROM user_accounts WHERE user_id = $1", [id]);
-            return deletedUser;
+            return  new User(deletedUser.rows[0]);
         } catch (err) {
             return err.message;
         }

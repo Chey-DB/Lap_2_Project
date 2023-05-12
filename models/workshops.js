@@ -1,7 +1,7 @@
 const db = require("../database/connect.js")
 
 class Workshop {
-  constructor (workshop_id, title, description, location, date, time, image_data, user_id) {
+  constructor ({ workshop_id, title, description, location, date, time, image_data, username }) {
     this.id = workshop_id;
     this.title = title;
     this.description = description;
@@ -9,13 +9,22 @@ class Workshop {
     this.date = date;
     this.time = time;
     this.image_data = image_data;
-    this.user_id = user_id;
+    this.username = username;
   }
+
+    static async getWorkshopWithLastId() {
+        try {
+            const lastId = await db.query("SELECT * FROM workshops WHERE workshop_id = (SELECT MAX(workshop_id) FROM workshops)");
+            return lastId;
+        } catch (err) {
+            return err.message;
+        }
+    }
 
      static async getAll() {
         try {
             const workshops = await db.query("SELECT * FROM workshops");
-            return workshops;
+            return workshops.rows.map(workshop => new Workshop(workshop));
         } catch (err) {
             return err.message;
         }
@@ -24,7 +33,7 @@ class Workshop {
     static async getById(id) {
         try {
             const workshop = await db.query("SELECT * FROM workshops WHERE workshop_id = $1", [id]);
-            return workshop;
+            return new Workshop(workshop.rows[0]);
         } catch (err) {
             return err.message;
         }
@@ -32,8 +41,11 @@ class Workshop {
 
     static async create(workshop) {
         try {
-            const newWorkshop = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.user_id]);
-            return newWorkshop.rows[0];
+            const { title, description, location, date, time, image_data, username } = workshop;
+            const response = await db.query("INSERT INTO workshops (title, description, location, date, time, image_data, username) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *", [title, description, location, date, time, image_data, username]);
+            const newId = response.rows[0].workshop_id;
+            const newWorkshop = await Workshop.getById(newId);
+            return newWorkshop
         } catch (err) {
             return err.message;
         }
@@ -41,17 +53,17 @@ class Workshop {
 
     static async update(id, workshop) {
         try {
-            const updatedWorkshop = await db.query("UPDATE workshops SET title = $1, description = $2, location = $3, date = $4, time = $5, image_data = $6, user_id = $7 WHERE workshop_id = $8 RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.user_id, id]);
+            const updatedWorkshop = await db.query("UPDATE workshops SET title = $1, description = $2, location = $3, date = $4, time = $5, image_data = $6, username = $7 WHERE workshop_id = $8 RETURNING *", [workshop.title, workshop.description, workshop.location, workshop.date, workshop.time, workshop.image_data, workshop.username, id]);
             return updatedWorkshop;
         } catch (err) {
             return err.message;
         }
     }
 
-    async destroy(id) {
+    async destroy() {
         try {
-            const deletedWorkshop = await db.query("DELETE FROM workshops WHERE workshop_id = $1", [id]);
-            return deletedWorkshop.rows[0];
+            const deletedWorkshop = await db.query("DELETE FROM workshops WHERE workshop_id = $1", [this.id]);
+            return new Workshop(deletedWorkshop.rows[0]);
         } catch (err) {
             return err.message;
         }
